@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#247a5b" />
+  <title>تحليل البشرة بالذكاء الاصطناعي | صيدلية الريان</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --green: #247a5b;
+      --green-dark: #124b3e;
+      --green-soft: #eaf4ed;
+      --pink: #f16f7c;
+      --ink: #173f3b;
+      --muted: #728582;
+      --line: #dce8e1;
+      --surface: #ffffff;
+      --background: #f8faf7;
+      --shadow: 0 18px 50px rgba(28, 76, 60, .08);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Cairo", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 90% 12%, rgba(241,111,124,.10), transparent 19rem),
+        radial-gradient(circle at 4% 28%, rgba(83,153,113,.10), transparent 18rem),
+        var(--background);
+    }
+    button, input, textarea { font: inherit; }
+    button { cursor: pointer; }
+    .topbar {
+      height: 82px;
+      background: rgba(255,255,255,.92);
+      border-bottom: 1px solid #edf1ed;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 clamp(20px, 6vw, 88px);
+      gap: 24px;
+    }
+    .brand { display: flex; align-items: center; gap: 12px; direction: ltr; text-decoration: none; color: var(--green-dark); }
+    .brand-name { font-family: Arial, sans-serif; font-weight: 800; font-size: 24px; letter-spacing: -.6px; }
+    .nav { display: flex; align-items: center; gap: clamp(18px, 3.5vw, 48px); color: #294c48; font-size: 14px; }
+    .nav span { color: inherit; cursor: pointer; transition: 0.3s; }
+    .nav span.active { color: var(--green-dark); font-weight: 800; border-bottom: 2px solid var(--green); padding-bottom: 8px; }
+    .cart { font-size: 23px; color: var(--green-dark); }
+    main { max-width: 1260px; margin: 0 auto; padding: 48px 24px 70px; }
+    .hero { text-align: center; position: relative; margin-bottom: 34px; }
+    .eyebrow { display: inline-flex; align-items: center; gap: 8px; background: #eaf4ed; color: var(--green); border-radius: 99px; padding: 7px 15px; font-size: 13px; font-weight: 700; }
+    .sparkle { color: var(--pink); }
+    h1 { font-size: clamp(30px, 4vw, 49px); line-height: 1.35; margin: 17px 0 10px; font-weight: 800; letter-spacing: -.8px; }
+    h1 span { color: var(--pink); }
+    .hero p { color: #617773; font-size: 16px; line-height: 1.9; max-width: 650px; margin: 0 auto; }
+    .layout { display: grid; grid-template-columns: minmax(0, 1fr) 310px; gap: 26px; align-items: stretch; }
+    .form-card, .how-card { background: rgba(255,255,255,.94); border: 1px solid #edf1ed; border-radius: 26px; box-shadow: var(--shadow); }
+    .form-card { padding: 28px; }
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; }
+    .section-title { display: flex; align-items: center; gap: 10px; font-size: 18px; font-weight: 800; margin: 0 0 16px; }
+    .title-icon { width: 37px; height: 37px; display: grid; place-items: center; background: var(--green-soft); color: var(--green); border-radius: 12px; font-size: 19px; }
+    .dropzone {
+      min-height: 360px; border: 1.7px dashed #8ebaa3; border-radius: 20px; background: #fbfdfb;
+      display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 22px; text-align: center;
+      transition: .2s ease; position: relative; overflow: hidden;
+    }
+    .dropzone.dragover { background: #eef8f0; border-color: var(--green); transform: scale(1.01); }
+    .upload-icon { width: 72px; height: 72px; border-radius: 22px; background: #eaf4ed; display: grid; place-items: center; font-size: 34px; margin-bottom: 15px; }
+    .dropzone h3 { font-size: 18px; margin: 0 0 6px; }
+    .dropzone p { color: var(--muted); font-size: 13px; line-height: 1.8; margin: 0; }
+    .preview-wrap { display: none; width: 100%; height: 230px; position: relative; margin-bottom: 14px; }
+    .preview-wrap img { width: 100%; height: 100%; object-fit: contain; border-radius: 14px; background: #f1f5f1; }
+    .remove-image { position: absolute; top: 8px; left: 8px; border: 0; border-radius: 50%; background: #fff; width: 34px; height: 34px; box-shadow: 0 4px 14px #0002; color: #b83245; font-size: 19px; }
+    .upload-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 20px; }
+    .secondary-btn { background: #fff; color: var(--ink); border: 1px solid #d9e4dd; border-radius: 99px; padding: 11px 17px; font-size: 13px; font-weight: 700; transition: .2s; }
+    .secondary-btn:hover { border-color: var(--green); background: #f5faf6; }
+    .hint { color: #91a09c; font-size: 11px !important; margin-top: 15px !important; }
+    .description-label { display: flex; align-items: center; justify-content: space-between; font-size: 15px; font-weight: 800; margin-bottom: 12px; }
+    .description-label span { color: var(--muted); font-size: 11px; font-weight: 500; }
+    textarea { width: 100%; min-height: 285px; resize: vertical; border: 1px solid #dce5e0; border-radius: 16px; padding: 17px; outline: none; color: var(--ink); background: #fff; line-height: 1.9; font-size: 14px; transition: .2s; }
+    textarea:focus { border-color: #72a98b; box-shadow: 0 0 0 3px rgba(36,122,91,.09); }
+    textarea::placeholder { color: #9aa9a5; }
+    .privacy { display: flex; align-items: flex-start; gap: 8px; color: var(--muted); font-size: 11px; line-height: 1.8; margin-top: 12px; }
+    .analyze-btn { width: 100%; border: 0; border-radius: 99px; color: #fff; background: linear-gradient(110deg, #287d5d, #398b68); font-weight: 800; font-size: 17px; padding: 17px 20px; margin-top: 23px; box-shadow: 0 10px 22px rgba(36,122,91,.18); transition: .2s; }
+    .analyze-btn:hover { transform: translateY(-2px); box-shadow: 0 13px 26px rgba(36,122,91,.25); }
+    
+    .how-card { background: linear-gradient(160deg, #f0f6ef, #fff); padding: 26px 22px; }
+    .how-card h2 { margin: 0 0 24px; font-size: 19px; }
+    .step { display: grid; grid-template-columns: 42px 1fr; gap: 12px; margin-bottom: 26px; }
+    .step-number { width: 42px; height: 42px; display: grid; place-items: center; border-radius: 50%; background: #fff; border: 1px solid #dbe8de; color: var(--green); font-weight: 800; box-shadow: 0 4px 14px #173f3b0b; }
+    .step h3 { font-size: 14px; margin: 0 0 5px; }
+    .step p { font-size: 12px; color: var(--muted); line-height: 1.9; margin: 0; }
+    .side-note { border-top: 1px solid #dce8df; padding-top: 17px; color: #71847e; font-size: 11px; line-height: 1.9; }
+    
+    .benefits { display: grid; grid-template-columns: repeat(4, 1fr); margin-top: 28px; gap: 12px; }
+    .benefit { text-align: center; padding: 15px 8px; border-left: 1px solid #e0e8e2; }
+    .benefit:last-child { border-left: 0; }
+    .benefit-icon { width: 45px; height: 45px; border-radius: 50%; background: #e8f2e9; display: grid; place-items: center; margin: 0 auto 9px; font-size: 20px; }
+    .benefit h3 { font-size: 13px; margin: 0 0 4px; }
+    .benefit p { font-size: 11px; color: var(--muted); margin: 0; }
+    
+    .notice { display: none; margin-top: 18px; padding: 15px 17px; border-radius: 14px; font-size: 13px; line-height: 1.9; }
+    .notice.show { display: block; }
+    .notice.error { color: #8f2936; background: #fff0f1; border: 1px solid #f3cbd0; }
+    .notice.info { color: #245e49; background: #edf8f0; border: 1px solid #cde7d4; }
+    
+    .analysis-summary-box { background: #eaf4ed; border: 1px solid #bde0cd; border-radius: 16px; padding: 22px; margin-top: 25px; }
+    .analysis-summary-box h3 { color: var(--green-dark); margin-top: 0; font-size: 18px; font-weight: 800; }
+    .analysis-summary-box p { font-size: 14px; line-height: 1.8; margin: 8px 0; color: #173f3b; }
+
+    .suggestion-box { background: white; border: 1px solid #dcedc8; border-radius: 16px; padding: 22px; margin-top: 20px; box-shadow: var(--shadow); }
+    .suggestion-title { font-size: 17px; font-weight: 800; color: var(--green); margin-bottom: 12px; border-bottom: 2px solid var(--green-soft); padding-bottom: 8px; }
+    table { width: 100%; border-collapse: collapse; margin-top: 10px; background: white; }
+    th, td { border: 1px solid var(--line); padding: 12px; text-align: right; font-size: 14px; }
+    th { background-color: var(--green-soft); color: var(--green-dark); }
+    
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    /* نافذة الكاميرا الحية المباشرة */
+    #cameraModal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; justify-content: center; align-items: center; }
+    .camera-box { background: white; padding: 20px; border-radius: 16px; text-align: center; max-width: 500px; width: 90%; }
+    .camera-box video { width: 100%; border-radius: 10px; background: #000; }
+    .camera-buttons { margin-top: 15px; display: flex; justify-content: center; gap: 10px; }
+
+    footer { text-align: center; padding: 22px; color: #879691; font-size: 12px; border-top: 1px solid #e8eee9; background: #fff; margin-top: 40px; }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#" aria-label="صيدلية الريان">
+      <span class="brand-name">صيدلية الريان</span>
+    </a>
+    <nav class="nav" aria-label="القائمة الرئيسية">
+      <span class="active" onclick="switchTab('consultTab', this)">الرئيسية</span>
+      <span onclick="switchTab('productsTab', this)">المنتجات والأصناف</span>
+    </nav>
+    <span class="cart" aria-hidden="true">♡</span>
+  </header>
+
+  <main>
+    <div id="consultTab" class="tab-content active">
+      <section class="hero">
+        <div class="eyebrow"><span class="sparkle">✦</span> عناية أذكى ببشرتك</div>
+        <h1>حلّل بشرتك مع <span>صيدلية الريان</span></h1>
+        <p>ارفعي صورة واضحة لبشرتك أو التقطيها مباشرة، واكتبي تفاصيل المشكلة للحصول على تحليل نوع البشرة وروتين عناية مخصص.</p>
+      </section>
+
+      <section class="layout">
+        <div class="form-card">
+          <form id="skinForm">
+            <div class="form-grid">
+              <section>
+                <h2 class="section-title"><span class="title-icon">▧</span> ارفعي صورة لبشرتك (إجباري)</h2>
+                <div class="dropzone" id="dropzone">
+                  <div class="upload-icon" id="uploadIcon">＋</div>
+                  <div class="preview-wrap" id="previewWrap">
+                    <img id="preview" alt="معاينة صورة البشرة">
+                    <button class="remove-image" id="removeImage" type="button" aria-label="حذف الصورة">×</button>
+                  </div>
+                  <h3 id="uploadHeading">اختاري صورة واضحة</h3>
+                  <p id="uploadText">اسحبي الصورة إلى هنا أو اختاريها من جهازك أو التقطيها مباشرة بالكاميرا.</p>
+                  <input id="fileInput" type="file" accept="image/*" hidden>
+                  <div class="upload-actions">
+                    <button class="secondary-btn" type="button" id="chooseBtn">▣ اختيار صورة</button>
+                    <button class="secondary-btn" type="button" id="cameraBtn">◎ التقاط صورة</button>
+                  </div>
+                  <p class="hint">الصيغ المدعومة: JPG، PNG، WEBP — الحد الأقصى 8 ميجابايت</p>
+                </div>
+              </section>
+
+              <section>
+                <h2 class="section-title"><span class="title-icon">▤</span> اشرحي مشكلتك بالتفصيل</h2>
+                <label class="description-label" for="description">
+                  <span>وصف المشكلة</span>
+                  <span id="counter">0 / 500</span>
+                </label>
+                <textarea id="description" maxlength="500" placeholder="مثال: أعاني من حبوب في منطقة الجبهة، وبشرتي دهنية..."></textarea>
+                <div class="privacy"><span>🔒</span><span>تجنّبي كتابة معلومات شخصية. الصورة هي الأساس في التحليل.</span></div>
+                <button class="analyze-btn" id="analyzeBtn" type="submit">✦ &nbsp; حلّل بشرتي &nbsp; ←</button>
+                <div id="notice" class="notice" role="status" aria-live="polite"></div>
+              </section>
+            </div>
+          </form>
+        </div>
+
+        <aside class="how-card">
+          <h2>كيف يعمل؟ <span style="color:var(--green)">ⓘ</span></h2>
+          <div class="step">
+            <div class="step-number">1</div>
+            <div><h3>ارفعي صورة أو التقطيها</h3><p>استخدمي كاميرا جهازك لالتقاط الصورة مباشرة.</p></div>
+          </div>
+          <div class="step">
+            <div class="step-number">2</div>
+            <div><h3>اكتبي وصف المشكلة</h3><p>اذكري نوع المشكلة لتحديد الروتين المناسب.</p></div>
+          </div>
+          <div class="step">
+            <div class="step-number">3</div>
+            <div><h3>احصلي على الروتين والمنتجات</h3><p>تظهر لك نتيجة نوع البشرة، الروتين، والأصناف المقترحة.</p></div>
+          </div>
+        </aside>
+      </section>
+
+      <div id="loader" class="loader" style="text-align:center; display:none; margin-top:25px; font-size:18px;">⏳ جاري فحص الصورة بالذكاء الاصطناعي وتحديد نوع البشرة وروتين العناية...</div>
+      <div id="resultContainer"></div>
+    </div>
+
+    <!-- تبويب الأصناف -->
+    <div id="productsTab" class="tab-content">
+      <section class="hero">
+        <h1>قائمة مخزون <span>صيدلية الريان</span></h1>
+        <p>استعراض كافة الأصناف والمنتجات المتوفرة في النظام</p>
+      </section>
+      <input type="text" id="searchInput" placeholder="🔍 بحث سريع في الأصناف..." onkeyup="filterProducts()" style="padding: 14px; width: 100%; border: 1px solid var(--line); border-radius: 12px; font-size: 15px; margin-bottom: 20px; background: white; outline: none;">
+      <div id="productsTableContainer" style="overflow-x: auto;"></div>
+    </div>
+  </main>
+
+  <!-- نافذة الكاميرا المنبثقة -->
+  <div id="cameraModal">
+    <div class="camera-box">
+      <h3>التقاط صورة مباشرة</h3>
+      <video id="videoElement" autoplay playsinline></video>
+      <canvas id="canvasElement" style="display:none;"></canvas>
+      <div class="camera-buttons">
+        <button class="secondary-btn" type="button" id="captureNowBtn" style="background:var(--green); color:white;">📸 التقاط الصورة</button>
+        <button class="secondary-btn" type="button" id="closeCameraBtn" style="background:#b83245; color:white;">✕ إغلاق</button>
+      </div>
+    </div>
+  </div>
+
+  <footer id="contact">صيدلية الريان · عناية ببشرتك بكل اهتمام</footer>
+
+  <script>
+    const BACKEND_URL = "http://127.0.0.1:8000";
+
+    const fileInput = document.getElementById('fileInput');
+    const chooseBtn = document.getElementById('chooseBtn');
+    const cameraBtn = document.getElementById('cameraBtn');
+    const dropzone = document.getElementById('dropzone');
+    const preview = document.getElementById('preview');
+    const previewWrap = document.getElementById('previewWrap');
+    const uploadIcon = document.getElementById('uploadIcon');
+    const uploadHeading = document.getElementById('uploadHeading');
+    const uploadText = document.getElementById('uploadText');
+    const removeImage = document.getElementById('removeImage');
+    
+    const cameraModal = document.getElementById('cameraModal');
+    const videoElement = document.getElementById('videoElement');
+    const canvasElement = document.getElementById('canvasElement');
+    const captureNowBtn = document.getElementById('captureNowBtn');
+    const closeCameraBtn = document.getElementById('closeCameraBtn');
+
+    let streamInstance = null;
+    let selectedFile = null;
+    let previewUrl = null;
+
+    chooseBtn.addEventListener('click', () => fileInput.click());
+    fileInput.addEventListener('change', e => handleFile(e.target.files[0]));
+
+    // تفعيل زر التقاط صورة ليفتح كاميرا الويب المباشرة
+    cameraBtn.addEventListener('click', async () => {
+      try {
+        streamInstance = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } });
+        videoElement.srcObject = streamInstance;
+        cameraModal.style.display = 'flex';
+      } catch (err) {
+        alert("تعذر الوصول إلى الكاميرا. تأكد من السماح للمتصفح باستخدام الكاميرا أو استخدام زر 'اختيار صورة'.");
+      }
+    });
+
+    // التقاط الصورة من الكاميرا المباشرة
+    captureNowBtn.addEventListener('click', () => {
+      const width = videoElement.videoWidth;
+      const height = videoElement.videoHeight;
+      canvasElement.width = width;
+      canvasElement.height = height;
+      const ctx = canvasElement.getContext('2d');
+      ctx.drawImage(videoElement, 0, 0, width, height);
+
+      canvasElement.toBlob(blob => {
+        const file = new File([blob], "camera_capture.jpg", { type: "image/jpeg" });
+        handleFile(file);
+        stopCamera();
+      }, 'image/jpeg');
+    });
+
+    // إغلاق الكاميرا
+    closeCameraBtn.addEventListener('click', stopCamera);
+
+    function stopCamera() {
+      if (streamInstance) {
+        streamInstance.getTracks().forEach(track => track.stop());
+        streamInstance = null;
+      }
+      cameraModal.style.display = 'none';
+    }
+
+    function handleFile(file) {
+      if (!file) return;
+      hideNotice();
+      if (!file.type.startsWith('image/')) {
+        showNotice('الرجاء اختيار ملف صورة صالح.', 'error'); return;
+      }
+      if (file.size > 8 * 1024 * 1024) {
+        showNotice('حجم الصورة أكبر من 8 ميجابايت.', 'error'); return;
+      }
+      selectedFile = file;
+      if (previewUrl) URL.revokeObjectURL(previewUrl);
+      previewUrl = URL.createObjectURL(file);
+      preview.src = previewUrl;
+      previewWrap.style.display = 'block';
+      uploadIcon.style.display = 'none';
+      uploadHeading.textContent = file.name || "صورة ملتقطة بالكاميرا";
+      uploadText.textContent = 'تم اختيار الصورة بنجاح.';
+    }
+
+    function clearImage() {
+      selectedFile = null;
+      fileInput.value = '';
+      preview.removeAttribute('src');
+      previewWrap.style.display = 'none';
+      uploadIcon.style.display = 'grid';
+      uploadHeading.textContent = 'اختاري صورة واضحة';
+      uploadText.innerHTML = 'اسحبي الصورة إلى هنا أو اختاريها من جهازك أو التقطيها مباشرة بالكاميرا.';
+      if (previewUrl) URL.revokeObjectURL(previewUrl);
+      previewUrl = null;
+    }
+    removeImage.addEventListener('click', clearImage);
+
+    // معالجة السحب والإفلات
+    ['dragenter', 'dragover'].forEach(eventName => {
+      dropzone.addEventListener(eventName, e => { e.preventDefault(); e.stopPropagation(); dropzone.classList.add('dragover'); });
+    });
+    ['dragleave', 'drop'].forEach(eventName => {
+      dropzone.addEventListener(eventName, e => { e.preventDefault(); e.stopPropagation(); dropzone.classList.remove('dragover'); });
+    });
+    dropzone.addEventListener('drop', e => handleFile(e.dataTransfer.files[0]));
+
+    const description = document.getElementById('description');
+    const counter = document.getElementById('counter');
+    description.addEventListener('input', () => {
+      counter.textContent = `${description.value.length} / 500`;
+    });
+
+    const notice = document.getElementById('notice');
+    function showNotice(message, type) {
+      notice.textContent = message;
+      notice.className = `notice show ${type}`;
+    }
+    function hideNotice() {
+      notice.textContent = '';
+      notice.className = 'notice';
+    }
+
+    function switchTab(tabId, btn) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.nav span').forEach(el => el.classList.remove('active'));
+      document.getElementById(tabId).classList.add('active');
+      btn.classList.add('active');
+      if (tabId === 'productsTab') loadProducts();
+    }
+
+    // إرسال البيانات للـ Backend
+    const form = document.getElementById('skinForm');
+    const loader = document.getElementById('loader');
+    const resultContainer = document.getElementById('resultContainer');
+
+    form.addEventListener('submit', async e => {
+      e.preventDefault();
+      hideNotice();
+
+      if (!selectedFile) {
+        showNotice('يرجى رفع صورة للبشرة (إجباري) ليقوم الذكاء الاصطناعي بتحليلها.', 'error');
+        return;
+      }
+      if (!description.value.trim()) {
+        showNotice('يرجى كتابة وصف مختصر للمشكلة.', 'error');
+        description.focus();
+        return;
+      }
+
+      loader.style.display = 'block';
+      resultContainer.innerHTML = '';
+
+      const formData = new FormData();
+      formData.append("symptom", description.value);
+      formData.append("file", selectedFile);
+
+      try {
+        const response = await fetch(`${BACKEND_URL}/consult`, { method: "POST", body: formData });
+        loader.style.display = 'none';
+
+        if (!response.ok) throw new Error("حدث خطأ في الاتصال بالخادم الخلفي.");
+
+        const data = await response.json();
+        const res = data.result;
+        const products = data.products;
+
+        let html = "";
+        if (res.see_pharmacist) {
+          html += `<div style="background: #fff3e0; color: #e65100; padding: 15px; border-radius: 12px; margin-top: 20px; font-weight: bold; border-right: 5px solid #f57c00;">⚠️ تنبيه مهم: هذه الحالة حساسة وتتطلب مراجعة صيدلاني أو طبيب مباشر.</div>`;
+        }
+
+        html += `<div class="analysis-summary-box">`;
+        html += `<h3>🔍 نتيجة تحليل البشرة والروتين المقترح:</h3>`;
+        html += `<p><b>نوع البشرة (من التحليل البصري للصورة):</b> ${res.skin_type || 'غير محدد'}</p>`;
+        html += `<p><b>روتين العناية المخصص:</b> ${res.routine_advice || 'غير متوفر'}</p>`;
+        html += `</div>`;
+
+        html += `<h3 style="margin-top:25px; color:var(--green-dark); font-weight:800;">📦 المنتجات والأصناف المقترحة من المخزون:</h3>`;
+
+        const picks = res.picks || [];
+        if (picks.length === 0) {
+          html += `<p style="margin-top: 20px; text-align:center;">لم يتم العثور على منتج مطابق في القائمة.</p>`;
+        }
+
+        picks.forEach((pick, index) => {
+          const prod = products[pick.id];
+          html += `<div class="suggestion-box">`;
+          html += `<div class="suggestion-title">الاقتراح ${index + 1}</div>`;
+          
+          if (prod) {
+            html += `<table><tr>`;
+            for (let key in prod) { html += `<th>${key}</th>`; }
+            html += `</tr><tr>`;
+            for (let key in prod) { html += `<td>${prod[key]}</td>`; }
+            html += `</tr></table>`;
+          }
+          
+          html += `<p style="margin-top: 12px; color: var(--green-dark); font-weight: bold; font-size: 14px;">سبب الاختيار: <span style="font-weight: normal; color: #333;">${pick.reason}</span></p>`;
+          html += `</div>`;
+        });
+
+        if (res.warning) {
+          html += `<div style="background: #fff3e0; color: #e65100; padding: 15px; border-radius: 12px; margin-top: 20px; font-weight: bold;"><b>ملاحظة:</b> ${res.warning}</div>`;
+        }
+
+        resultContainer.innerHTML = html;
+
+      } catch (error) {
+        loader.style.display = 'none';
+        showNotice("تعذر الاتصال بالـ Backend. تأكد من تشغيل سيرفر FastAPI. الخطأ: " + error.message, 'error');
+      }
+    });
+
+    let allProducts = [];
+    async function loadProducts() {
+      try {
+        const res = await fetch(`${BACKEND_URL}/products`);
+        allProducts = await res.json();
+        renderTable(allProducts);
+      } catch (err) {
+        document.getElementById("productsTableContainer").innerHTML = "<p style='color:red;'>فشل تحميل الأصناف.</p>";
+      }
+    }
+
+    function renderTable(products) {
+      const container = document.getElementById("productsTableContainer");
+      if (!products.length) { container.innerHTML = "<p>لا توجد أصناف متاحة.</p>"; return; }
+      let html = `<table><tr>`;
+      Object.keys(products[0]).forEach(key => { html += `<th>${key}</th>`; });
+      html += `</tr>`;
+      products.forEach(p => {
+        html += `<tr>`;
+        Object.values(p).forEach(val => { html += `<td>${val}</td>`; });
+        html += `</tr>`;
+      });
+      html += `</table>`;
+      container.innerHTML = html;
+    }
+
+    function filterProducts() {
+      const query = document.getElementById("searchInput").value.toLowerCase();
+      const filtered = allProducts.filter(p => Object.values(p).some(val => String(val).toLowerCase().includes(query)));
+      renderTable(filtered);
+    }
+  </script>
+</body>
+</html>
