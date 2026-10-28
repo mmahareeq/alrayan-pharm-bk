@@ -1,0 +1,1 @@
+fastapi, uvicorn, pandas, openpyxl, anthropic, python-multipart
