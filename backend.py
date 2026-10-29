@@ -4,6 +4,7 @@ import base64
 import pandas as pd
 from fastapi import FastAPI, UploadFile, File, Form, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import HTMLResponse
 import anthropic
 
 app = FastAPI(title="Al-Rayan Pharmacy Backend")
@@ -20,7 +21,6 @@ FILE = os.path.join(os.path.dirname(__file__), "skincare_products_v12.xlsx")
 
 client = anthropic.Anthropic(api_key="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")
 
-# تعريف المخطط الهيكلي لإجبار Claude على إرجاع بيانات صحيحة دائماً
 RESPONSE_TOOL = {
     "name": "respond_skin_analysis",
     "description": "إرسال نتيجة تحليل البشرة والروتين اليومي واختيار المنتجات",
@@ -77,6 +77,17 @@ def load_excel_data():
         return pd.DataFrame()
     return pd.read_excel(FILE).fillna("")
 
+@app.get("/", response_class=HTMLResponse)
+def serve_frontend():
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    html_path = os.path.join(base_dir, "index.html")
+    
+    if os.path.exists(html_path):
+        with open(html_path, "r", encoding="utf-8") as f:
+            return f.read()
+            
+    return f"<h1>عذراً يا دكتور، ملف index.html غير موجود في المسار: {base_dir}</h1>"
+
 @app.get("/products")
 def get_products():
     df = load_excel_data()
@@ -129,7 +140,6 @@ async def consult_ai(symptom: str = Form(...), file: UploadFile = File(None)):
             }],
         )
         
-        # استخراج البيانات المهيكلة النظيفة من الـ tool_use مباشرة بدون خطأ JSON Parsing
         result_json = None
         for block in msg.content:
             if block.type == "tool_use":
