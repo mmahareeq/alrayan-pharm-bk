@@ -19,7 +19,7 @@ app.add_middleware(
 
 FILE = os.path.join(os.path.dirname(__file__), "skincare_products_v12.xlsx")
 
-client = anthropic.Anthropic(api_key="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")
+client = anthropic.Anthropic(api_key=os.environ.get("ANTHROPIC_API_KEY"))
 
 RESPONSE_TOOL = {
     "name": "respond_skin_analysis",
