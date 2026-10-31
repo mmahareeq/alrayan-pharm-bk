@@ -2,102 +2,101 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>استشارة البشرة - صيدلية الريان وسوبر فارم</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>حلّل بشرتك مع صيدلية الريان</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css" rel="stylesheet">
     <style>
-        :root {
-            --primary-color: #0d6efd;
-            --bg-color: #f8f9fa;
-        }
         body {
-            background-color: var(--bg-color);
+            background-color: #fbf9f7;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            padding-bottom: 30px;
+            color: #2c3e50;
+            padding-bottom: 50px;
+        }
+        .navbar-brand {
+            font-weight: bold;
+            color: #d35400 !important;
+        }
+        .hero-section {
+            padding: 40px 0 20px 0;
+            text-align: center;
+        }
+        .hero-title {
+            color: #c0392b;
+            font-weight: 800;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
         }
         .main-card {
             border: none;
-            border-radius: 16px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
             background: #ffffff;
+            padding: 30px;
+            margin-top: 20px;
         }
-        /* تحسين التجاوب للجداول على الموبايل */
-        .table-responsive-custom {
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
-            border-radius: 8px;
-            margin-bottom: 1rem;
-        }
-        .table-responsive-custom table {
-            min-width: 600px; /* ضمان عدم انكماش الجدول بشكل مشوه */
-        }
-        .product-img-preview {
-            max-width: 100%;
-            height: auto;
-            max-height: 250px;
-            object-fit: contain;
+        .btn-primary {
+            background-color: #0d6efd;
+            border: none;
             border-radius: 12px;
+            padding: 12px;
+            font-weight: bold;
+            font-size: 1.1rem;
         }
-        /* تعديلات خفيفة للموبايل */
-        @media (max-width: 576px) {
-            .container {
-                padding-left: 12px;
-                padding-right: 12px;
-            }
-            .card-body {
-                padding: 1.25rem;
-            }
-            h2 {
-                font-size: 1.4rem;
-            }
-            .btn-lg {
-                padding: 0.75rem 1rem;
-                font-size: 1rem;
-            }
+        .table-responsive {
+            border-radius: 12px;
+            overflow: hidden;
         }
     </style>
 </head>
 <body>
 
-<div class="container my-3 my-md-5">
+<!-- شريط التنقل العلوي -->
+<nav class="navbar navbar-expand-lg bg-white shadow-sm py-3">
+    <div class="container">
+        <a class="navbar-brand" href="#">صيدلية الريان</a>
+        <div class="ms-auto text-muted small">سوبر فارم & صيدلية الريان</div>
+    </div>
+</nav>
+
+<div class="container">
+    <div class="hero-section">
+        <span class="badge bg-light text-danger border mb-2 px-3 py-2 rounded-pill">عناية أذكى ببشرتك +</span>
+        <h1 class="hero-title">حلّل بشرتك مع صيدلية الريان</h1>
+        <p class="text-muted">ارفعي صورة واضحة لبشرتك أو التقطيها مباشرة، واكتبي تفاصيل المشكلة للحصول على تحليل نوع البشرة وروتين عناية مخصص.</p>
+    </div>
+
     <div class="row justify-content-center">
         <div class="col-12 col-lg-10">
-            <div class="card main-card p-2 p-md-4">
-                <div class="card-body">
-                    <h2 class="text-center text-primary mb-4 fw-bold">فحص البشرة بالذكاء الاصطناعي 🌿</h2>
-                    <p class="text-center text-muted mb-4">صيدلية الريان & super Farm</p>
-
-                    <form id="consultForm" enctype="multipart/form-data">
-                        <div class="mb-3">
-                            <label for="symptom" class="form-label fw-bold">وصف المشكلة أو الشكوى:</label>
-                            <textarea class="form-control" id="symptom" name="symptom" rows="3" placeholder="مثال: بشرتي دهنية وأعاني من حب الشباب والآثار..." required></textarea>
-                        </div>
-
-                        <div class="mb-4">
-                            <label for="file" class="form-label fw-bold">ارفق صورة للبشرة:</label>
-                            <input class="form-control" type="file" id="file" name="file" accept="image/*" capture="environment" required>
-                            <div class="form-text">يمكنك التقاط صورة مباشرة على الهاتف أو اختيارها من المعرض.</div>
-                        </div>
-
-                        <button type="submit" id="submitBtn" class="btn btn-primary btn-lg w-100 fw-bold">
-                            <span id="btnText">بدء التحليل واقتراح الروتين</span>
-                            <span id="btnSpinner" class="spinner-border spinner-border-sm d-none" role="status"></span>
-                        </button>
-                    </form>
-
-                    <!-- منطقة عرض النتائج -->
-                    <div id="resultsContainer" class="mt-4 d-none">
-                        <hr class="my-4">
-                        <h4 class="text-success mb-3 fw-bold">نتيجة التحليل والروتين المقترح:</h4>
-                        
-                        <div id="skinTypeBox" class="alert alert-info fw-bold"></div>
-                        <div id="routineAdviceBox" class="alert alert-light border p-3 mb-3"></div>
-                        
-                        <h5 class="fw-bold mt-4 mb-3">المنتجات الموصى بها من المخزون:</h5>
-                        <div id="productsList"></div>
-
-                        <div id="warningBox" class="alert alert-warning mt-3 d-none"></div>
+            <div class="card main-card">
+                <form id="consultForm" enctype="multipart/form-data">
+                    <div class="mb-4">
+                        <label for="file" class="form-label fw-bold">ارفعي صورة لبشرتك (إجباري):</label>
+                        <input class="form-control form-control-lg" type="file" id="file" name="file" accept="image/*" required>
                     </div>
+
+                    <div class="mb-4">
+                        <label for="symptom" class="form-label fw-bold">اشرحي مشكلتك بالتفصيل:</label>
+                        <textarea class="form-control" id="symptom" name="symptom" rows="4" placeholder="مثال: بشرتي دهنية وأعاني من حب الشباب والآثار..." required></textarea>
+                    </div>
+
+                    <button type="submit" id="submitBtn" class="btn btn-primary w-100">
+                        <span id="btnText">بدء التحليل واقتراح الروتين</span>
+                        <span id="btnSpinner" class="spinner-border spinner-border-sm d-none" role="status"></span>
+                    </button>
+                </form>
+
+                <!-- منطقة النتائج -->
+                <div id="resultsContainer" class="mt-5 d-none">
+                    <hr class="my-4">
+                    <h3 class="text-success mb-4 fw-bold">نتيجة التحليل والروتين المقترح:</h3>
+                    
+                    <div id="skinTypeBox" class="alert alert-info fw-bold fs-5"></div>
+                    <div id="routineAdviceBox" class="alert alert-light border p-4 mb-4 fs-6"></div>
+                    
+                    <h4 class="fw-bold mb-3">المنتجات الموصى بها من المخزون:</h4>
+                    <div id="productsList"></div>
+
+                    <div id="warningBox" class="alert alert-warning mt-3 d-none"></div>
                 </div>
             </div>
         </div>
@@ -113,7 +112,6 @@ document.getElementById('consultForm').addEventListener('submit', async function
     const btnSpinner = document.getElementById('btnSpinner');
     const resultsContainer = document.getElementById('resultsContainer');
     
-    // إظهار حالة التحميل
     submitBtn.disabled = true;
     btnText.textContent = 'جاري تحليل الصورة والمنتجات...';
     btnSpinner.classList.remove('d-none');
@@ -136,18 +134,16 @@ document.getElementById('consultForm').addEventListener('submit', async function
         const res = data.result;
         const productsMap = data.products;
 
-        // عرض نوع البشرة والنصائح
         document.getElementById('skinTypeBox').textContent = 'نوع البشرة المحدد: ' + res.skin_type;
         document.getElementById('routineAdviceBox').innerHTML = '<strong>الروتين اليومي:</strong><br>' + res.routine_advice.replace(/\n/g, '<br>');
 
-        // عرض المنتجات في جدول تجاوبي للموبايل
         const productsList = document.getElementById('productsList');
         productsList.innerHTML = '';
 
         let tableHTML = `
-        <div class="table-responsive-custom">
-            <table class="table table-bordered table-striped align-middle">
-                <thead class="table-primary">
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped align-middle bg-white">
+                <thead class="table-dark">
                     <tr>
                         <th style="width: 50px;">#</th>
                         <th>اسم الشركة</th>
@@ -174,7 +170,6 @@ document.getElementById('consultForm').addEventListener('submit', async function
         tableHTML += `</tbody></table></div>`;
         productsList.innerHTML = tableHTML;
 
-        // عرض التنبيهات إن وجدت
         if (res.warning) {
             const warningBox = document.getElementById('warningBox');
             warningBox.textContent = res.warning;
@@ -182,8 +177,6 @@ document.getElementById('consultForm').addEventListener('submit', async function
         }
 
         resultsContainer.classList.remove('d-none');
-        
-        // التمرير التلقائي للنتائج على الهاتف
         resultsContainer.scrollIntoView({ behavior: 'smooth' });
 
     } catch (err) {
