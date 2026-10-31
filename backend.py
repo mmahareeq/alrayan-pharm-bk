@@ -1,11 +1,11 @@
 import os
 import json
 import base64
+import httpx
 import pandas as pd
 from fastapi import FastAPI, UploadFile, File, Form, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse
-import anthropic
 
 app = FastAPI(title="Al-Rayan Pharmacy Backend")
 
@@ -19,9 +19,8 @@ app.add_middleware(
 
 FILE = os.path.join(os.path.dirname(__file__), "skincare_products_v12.xlsx")
 
-# قراءة مفتاح Anthropic حصرياً من إعدادات Render البيئية مع إزالة أي مسافات زائدة إن وجدت
-api_key_env = os.environ.get("ANTHROPIC_API_KEY", "").strip()
-client = anthropic.Anthropic(api_key=api_key_env)
+# قراءة مفتاح الـ API وتنظيفه
+ANTHROPIC_API_KEY = os.environ.get("ANTHROPIC_API_KEY", "").strip()
 
 RESPONSE_TOOL = {
     "name": "respond_skin_analysis",
@@ -67,7 +66,7 @@ SYSTEM_PROMPT = """أنت مستشار صيدلاني خبير للبشرة في
 القواعد الأساسية:
 1. اعتمد بشكل أساسي ومطلق على الفحص البصري للصورة لتحديد نوع البشرة (مثل: دهنية، جافة، مختلطة، حساسة، عادية).
 2. يجب اختيار 3 منتجات أساسية على الأقل لتغطية الروتين اليومي: (1. غسول، 2. مرطب، 3. واقي شمس).
-3. حاول بأقصى درجة أن تكون المنتجات الثلاثة من **نفس الشركة/الماركة** لتكوين روتين متكامل من نفس العلامة التجارية.
+3. حاول بأقصى درجة أن تكون المنتجات الثلاثة من نفس الشركة/الماركة لتكوين روتين متكامل من نفس العلامة التجارية.
 4. يجب عليك استخدام أداة respond_skin_analysis فقط لإعادة النتيجة بصيغة هيكلية دقيقة."""
 
 def load_excel_data():
@@ -83,12 +82,10 @@ def load_excel_data():
 def serve_frontend():
     base_dir = os.path.dirname(os.path.abspath(__file__))
     html_path = os.path.join(base_dir, "index.html")
-    
     if os.path.exists(html_path):
         with open(html_path, "r", encoding="utf-8") as f:
             return f.read()
-            
-    return f"<h1>عذراً يا دكتور، ملف index.html غير موجود في المسار: {base_dir}</h1>"
+    return "<h1>مرحباً بك في سيرفر صيدلية الريان</h1>"
 
 @app.get("/products")
 def get_products():
@@ -107,49 +104,65 @@ async def consult_ai(symptom: str = Form(...), file: UploadFile = File(None)):
         raise HTTPException(status_code=400, detail="صورة البشرة إجبارية للتحليل")
 
     catalog = df.to_csv(index=True, index_label="id")
-    user_content = []
     
     try:
         image_bytes = await file.read()
         media_type = file.content_type if file.content_type else "image/jpeg"
         base64_image = base64.b64encode(image_bytes).decode("utf-8")
-        user_content.append({
-            "type": "image",
-            "source": {
-                "type": "base64",
-                "media_type": media_type,
-                "data": base64_image,
-            },
-        })
     except Exception as img_err:
         raise HTTPException(status_code=400, detail=f"خطأ في قراءة الصورة: {str(img_err)}")
-    
-    user_content.append({
-        "type": "text",
-        "text": f"جدول المنتجات المتوفرة في المخزون:\n{catalog}\n\nشكوى ووصف الزبون: {symptom}"
-    })
+
+    # بناء الطلب المباشر لـ Anthropic API عبر HTTP Headers نظامية وآمنة تماماً
+    headers = {
+        "x-api-key": ANTHROPIC_API_KEY,
+        "anthropic-version": "2023-06-01",
+        "content-type": "application/json"
+    }
+
+    payload = {
+        "model": "claude-3-5-haiku-20241022",
+        "max_tokens": 2500,
+        "system": SYSTEM_PROMPT,
+        "tools": [RESPONSE_TOOL],
+        "tool_choice": {"type": "tool", "name": "respond_skin_analysis"},
+        "messages": [
+            {
+                "role": "user",
+                "content": [
+                    {
+                        "type": "image",
+                        "source": {
+                            "type": "base64",
+                            "media_type": media_type,
+                            "data": base64_image,
+                        },
+                    },
+                    {
+                        "type": "text",
+                        "text": f"جدول المنتجات المتوفرة في المخزون:\n{catalog}\n\nشكوى ووصف الزبون: {symptom}"
+                    }
+                ]
+            }
+        ]
+    }
 
     try:
-        msg = client.messages.create(
-            model="claude-haiku-5-5",
-            max_tokens=2500,
-            system=SYSTEM_PROMPT,
-            tools=[RESPONSE_TOOL],
-            tool_choice={"type": "tool", "name": "respond_skin_analysis"},
-            messages=[{
-                "role": "user",
-                "content": user_content,
-            }],
-        )
+        async with httpx.AsyncClient(timeout=60.0) as client:
+            response = await client.post("https://api.anthropic.com/v1/messages", headers=headers, json=payload)
+            
+        if response.status_code != 200:
+            raise HTTPException(status_code=response.status_code, detail=f"Anthropic API Error: {response.text}")
+            
+        resp_data = response.json()
         
         result_json = None
-        for block in msg.content:
-            if block.type == "tool_use":
-                result_json = block.input
+        for block in resp_data.get("content", []):
+            if block.get("type") == "tool_use":
+                result_json = block.get("input")
                 break
                 
         if not result_json:
-            raise HTTPException(status_code=500, detail="تعذر استخراج تحليل الذكاء الاصطناعي")
+            raise HTTPException(status_code=500, detail="تعذر استخراج تحليل الذكاء الاصطناعي من الاستجابة")
 
         return {
             "result": result_json,
