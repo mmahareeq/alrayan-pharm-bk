@@ -120,8 +120,8 @@ async def consult_ai(symptom: str = Form(...), file: UploadFile = File(None)):
     }
 
     payload = {
-        "model": "claude-3-5-haiku-20241022",
-        "max_tokens": 2500,
+        "model": "claude-haiku-5-5",
+        "max_tokens": 20000,
         "system": SYSTEM_PROMPT,
         "tools": [RESPONSE_TOOL],
         "tool_choice": {"type": "tool", "name": "respond_skin_analysis"},
