@@ -21,7 +21,7 @@ FILE = os.path.join(os.path.dirname(__file__), "skincare_products_v12.xlsx")
 
 # قراءة مفتاح Anthropic حصرياً من إعدادات Render البيئية مع إزالة أي مسافات زائدة إن وجدت
 api_key_env = os.environ.get("ANTHROPIC_API_KEY", "").strip()
-client = anthropic.Anthropic(api_key=api_key_env))
+client = anthropic.Anthropic(api_key=api_key_env)
 
 RESPONSE_TOOL = {
     "name": "respond_skin_analysis",
