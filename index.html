@@ -49,68 +49,71 @@
     .nav span { color: inherit; cursor: pointer; transition: 0.3s; }
     .nav span.active { color: var(--green-dark); font-weight: 800; border-bottom: 2px solid var(--green); padding-bottom: 8px; }
     .cart { font-size: 23px; color: var(--green-dark); text-decoration: none; }
-    main { max-width: 1260px; margin: 0 auto; padding: 48px 24px 70px; }
-    .hero { text-align: center; position: relative; margin-bottom: 34px; }
+    
+    main { max-width: 900px; margin: 0 auto; padding: 40px 20px 70px; }
+    .hero { text-align: center; position: relative; margin-bottom: 30px; }
     .eyebrow { display: inline-flex; align-items: center; gap: 8px; background: #eaf4ed; color: var(--green); border-radius: 99px; padding: 7px 15px; font-size: 13px; font-weight: 700; }
     .sparkle { color: var(--pink); }
-    h1 { font-size: clamp(30px, 4vw, 49px); line-height: 1.35; margin: 17px 0 10px; font-weight: 800; letter-spacing: -.8px; }
+    h1 { font-size: clamp(26px, 4vw, 42px); line-height: 1.35; margin: 15px 0 10px; font-weight: 800; letter-spacing: -.8px; }
     h1 span { color: var(--pink); }
-    .hero p { color: #617773; font-size: 16px; line-height: 1.9; max-width: 650px; margin: 0 auto; }
+    .hero p { color: #617773; font-size: 15px; line-height: 1.8; max-width: 600px; margin: 0 auto; }
     
-    .layout { display: grid; grid-template-columns: 310px minmax(0, 1fr) 310px; gap: 26px; align-items: stretch; }
-    @media (max-width: 1024px) {
-      .layout { grid-template-columns: 1fr; }
-    }
+    /* تخطيط عمودي متناسق وصحيح للجوال والشاشات */
+    .layout { display: flex; flex-direction: column; gap: 24px; }
     
-    .form-card, .how-card { background: rgba(255,255,255,.94); border: 1px solid #edf1ed; border-radius: 26px; box-shadow: var(--shadow); }
-    .form-card { padding: 28px; grid-column: 2; }
+    .form-card, .how-card { background: rgba(255,255,255,.94); border: 1px solid #edf1ed; border-radius: 26px; box-shadow: var(--shadow); padding: 28px; }
+    
     .section-title { display: flex; align-items: center; gap: 10px; font-size: 16px; font-weight: 800; margin: 0 0 16px; }
     .title-icon { width: 37px; height: 37px; display: grid; place-items: center; background: var(--green-soft); color: var(--green); border-radius: 12px; font-size: 19px; }
+    
     .dropzone {
-      min-height: 320px; border: 1.7px dashed #8ebaa3; border-radius: 20px; background: #fbfdfb;
-      display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 22px; text-align: center;
+      min-height: 280px; border: 1.7px dashed #8ebaa3; border-radius: 20px; background: #fbfdfb;
+      display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; text-align: center;
       transition: .2s ease; position: relative; overflow: hidden;
     }
     .dropzone.dragover { background: #eef8f0; border-color: var(--green); transform: scale(1.01); }
-    .upload-icon { width: 72px; height: 72px; border-radius: 22px; background: #eaf4ed; display: grid; place-items: center; font-size: 34px; margin-bottom: 15px; }
-    .dropzone h3 { font-size: 18px; margin: 0 0 6px; }
-    .dropzone p { color: var(--muted); font-size: 13px; line-height: 1.8; margin: 0; }
-    .preview-wrap { display: none; width: 100%; height: 230px; position: relative; margin-bottom: 14px; }
+    .upload-icon { width: 64px; height: 64px; border-radius: 18px; background: #eaf4ed; display: grid; place-items: center; font-size: 30px; margin-bottom: 12px; }
+    .dropzone h3 { font-size: 17px; margin: 0 0 6px; }
+    .dropzone p { color: var(--muted); font-size: 13px; line-height: 1.7; margin: 0; }
+    .preview-wrap { display: none; width: 100%; height: 220px; position: relative; margin-bottom: 14px; }
     .preview-wrap img { width: 100%; height: 100%; object-fit: contain; border-radius: 14px; background: #f1f5f1; }
     .remove-image { position: absolute; top: 8px; left: 8px; border: 0; border-radius: 50%; background: #fff; width: 34px; height: 34px; box-shadow: 0 4px 14px #0002; color: #b83245; font-size: 19px; }
-    .upload-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 20px; }
-    .secondary-btn { background: #fff; color: var(--ink); border: 1px solid #d9e4dd; border-radius: 99px; padding: 11px 17px; font-size: 13px; font-weight: 700; transition: .2s; }
+    .upload-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 18px; }
+    .secondary-btn { background: #fff; color: var(--ink); border: 1px solid #d9e4dd; border-radius: 99px; padding: 10px 16px; font-size: 13px; font-weight: 700; transition: .2s; }
     .secondary-btn:hover { border-color: var(--green); background: #f5faf6; }
-    .hint { color: #91a09c; font-size: 11px !important; margin-top: 15px !important; }
+    .hint { color: #91a09c; font-size: 11px !important; margin-top: 12px !important; }
     
     .description-label { display: flex; align-items: center; justify-content: space-between; font-size: 15px; font-weight: 800; margin-bottom: 12px; }
     .description-label span { color: var(--muted); font-size: 11px; font-weight: 500; }
-    textarea { width: 100%; min-height: 250px; resize: vertical; border: 1px solid #dce5e0; border-radius: 16px; padding: 17px; outline: none; color: var(--ink); background: #fff; line-height: 1.9; font-size: 14px; transition: .2s; }
+    textarea { width: 100%; min-height: 180px; resize: vertical; border: 1px solid #dce5e0; border-radius: 16px; padding: 16px; outline: none; color: var(--ink); background: #fff; line-height: 1.8; font-size: 14px; transition: .2s; }
     textarea:focus { border-color: #72a98b; box-shadow: 0 0 0 3px rgba(36,122,91,.09); }
     textarea::placeholder { color: #9aa9a5; }
+    
     .privacy { display: flex; align-items: flex-start; gap: 8px; color: var(--muted); font-size: 11px; line-height: 1.8; margin-top: 12px; }
-    .analyze-btn { width: 100%; border: 0; border-radius: 99px; color: #fff; background: linear-gradient(110deg, #287d5d, #398b68); font-weight: 800; font-size: 17px; padding: 17px 20px; margin-top: 23px; box-shadow: 0 10px 22px rgba(36,122,91,.18); transition: .2s; }
+    .analyze-btn { width: 100%; border: 0; border-radius: 99px; color: #fff; background: linear-gradient(110deg, #287d5d, #398b68); font-weight: 800; font-size: 17px; padding: 16px 20px; margin-top: 20px; box-shadow: 0 10px 22px rgba(36,122,91,.18); transition: .2s; }
     .analyze-btn:hover { transform: translateY(-2px); box-shadow: 0 13px 26px rgba(36,122,91,.25); }
     
-    .how-card { background: linear-gradient(160deg, #f0f6ef, #fff); padding: 26px 22px; grid-column: 1; }
-    .how-card h2 { margin: 0 0 24px; font-size: 19px; }
-    .step { display: grid; grid-template-columns: 42px 1fr; gap: 12px; margin-bottom: 26px; }
-    .step-number { width: 42px; height: 42px; display: grid; place-items: center; border-radius: 50%; background: #fff; border: 1px solid #dbe8de; color: var(--green); font-weight: 800; box-shadow: 0 4px 14px #173f3b0b; }
-    .step h3 { font-size: 14px; margin: 0 0 5px; }
-    .step p { font-size: 12px; color: var(--muted); line-height: 1.9; margin: 0; }
+    /* قسم كيف يعمل تحت بعضه */
+    .how-card { background: linear-gradient(160deg, #f0f6ef, #fff); }
+    .how-card h2 { margin: 0 0 20px; font-size: 18px; display: flex; align-items: center; justify-content: space-between; }
+    .steps-container { display: flex; flex-direction: column; gap: 16px; }
+    .step { display: flex; align-items: flex-start; gap: 14px; background: #fff; padding: 14px 16px; border-radius: 14px; border: 1px solid #e1ebe3; }
+    .step-number { width: 36px; height: 36px; display: grid; place-items: center; border-radius: 50%; background: var(--green-soft); color: var(--green); font-weight: 800; flex-shrink: 0; }
+    .step h3 { font-size: 14px; margin: 0 0 4px; color: var(--green-dark); }
+    .step p { font-size: 12px; color: var(--muted); line-height: 1.7; margin: 0; }
     
-    .notice { display: none; margin-top: 18px; padding: 15px 17px; border-radius: 14px; font-size: 13px; line-height: 1.9; }
+    .notice { display: none; margin-top: 16px; padding: 14px 16px; border-radius: 14px; font-size: 13px; line-height: 1.8; }
     .notice.show { display: block; }
     .notice.error { color: #8f2936; background: #fff0f1; border: 1px solid #f3cbd0; }
     
-    .analysis-summary-box { background: #eaf4ed; border: 1px solid #bde0cd; border-radius: 16px; padding: 22px; margin-top: 25px; }
+    .analysis-summary-box { background: #eaf4ed; border: 1px solid #bde0cd; border-radius: 16px; padding: 20px; margin-top: 25px; }
     .analysis-summary-box h3 { color: var(--green-dark); margin-top: 0; font-size: 18px; font-weight: 800; }
     .analysis-summary-box p { font-size: 14px; line-height: 1.8; margin: 8px 0; color: #173f3b; }
 
-    .suggestion-box { background: white; border: 1px solid #dcedc8; border-radius: 16px; padding: 22px; margin-top: 20px; box-shadow: var(--shadow); }
+    .suggestion-box { background: white; border: 1px solid #dcedc8; border-radius: 16px; padding: 20px; margin-top: 20px; box-shadow: var(--shadow); }
     .suggestion-title { font-size: 17px; font-weight: 800; color: var(--green); margin-bottom: 12px; border-bottom: 2px solid var(--green-soft); padding-bottom: 8px; }
     table { width: 100%; border-collapse: collapse; margin-top: 10px; background: white; }
-    th, td { border: 1px solid var(--line); padding: 12px; text-align: right; font-size: 14px; }
+    th, td { border: 1px solid var(--line); padding: 10px; text-align: right; font-size: 13px; }
     th { background-color: var(--green-soft); color: var(--green-dark); }
     
     .tab-content { display: none; }
@@ -144,59 +147,63 @@
         <p>ارفعي صورة واضحة لبشرتك أو التقطيها مباشرة، واكتبي تفاصيل المشكلة للحصول على تحليل نوع البشرة وروتين عناية مخصص.</p>
       </section>
 
+      <!-- الترتيب العمودي الصحيح: الصورة أولاً، ثم وصف المشكلة، ثم كيف يعمل تحت بعض -->
       <section class="layout">
-        <!-- عمود التعليمات على اليسار -->
+        
+        <!-- 1. كارت إرفاق الصورة -->
+        <div class="form-card">
+          <h2 class="section-title"><span class="title-icon">▧</span> ارفعي صورة لبشرتك (إجباري)</h2>
+          <div class="dropzone" id="dropzone">
+            <div class="upload-icon" id="uploadIcon">＋</div>
+            <div class="preview-wrap" id="previewWrap">
+              <img id="preview" alt="معاينة صورة البشرة">
+              <button class="remove-image" id="removeImage" type="button" aria-label="حذف الصورة">×</button>
+            </div>
+            <h3 id="uploadHeading">اختاري صورة واضحة</h3>
+            <p id="uploadText">اسحبي الصورة إلى هنا أو اختاريها من جهازك أو التقطيها مباشرة بالكاميرا.</p>
+            <input id="fileInput" type="file" accept="image/*" hidden>
+            <div class="upload-actions">
+              <button class="secondary-btn" type="button" id="chooseBtn">▣ اختيار صورة</button>
+              <button class="secondary-btn" type="button" id="cameraBtn">◎ التقاط صورة</button>
+            </div>
+            <p class="hint">الصيغ المدعومة: JPG، PNG، WEBP — الحد الأقصى 8 ميجابايت</p>
+          </div>
+        </div>
+
+        <!-- 2. كارت شرح المشكلة وزر التحليل -->
+        <div class="form-card">
+          <form id="skinForm">
+            <h2 class="section-title"><span class="title-icon">▤</span> اشرحي مشكلتك بالتفصيل</h2>
+            <label class="description-label" for="description">
+              <span>وصف المشكلة</span>
+              <span id="counter">0 / 500</span>
+            </label>
+            <textarea id="description" maxlength="500" placeholder="مثال: أعاني من حبوب في منطقة الجبهة، وبشرتي دهنية..."></textarea>
+            <div class="privacy"><span>🔒</span><span>تجنّبي كتابة معلومات شخصية. الصورة هي الأساس في التحليل.</span></div>
+            <button class="analyze-btn" id="analyzeBtn" type="submit">✦ &nbsp; حلّل بشرتي &nbsp; ←</button>
+            <div id="notice" class="notice" role="status" aria-live="polite"></div>
+          </form>
+        </div>
+
+        <!-- 3. قسم كيف يعمل مرتب تحت بعضه -->
         <aside class="how-card">
           <h2>كيف يعمل؟ <span style="color:var(--green)">ⓘ</span></h2>
-          <div class="step">
-            <div class="step-number">1</div>
-            <div><h3>ارفعي صورة أو التقطيها</h3><p>استخدمي كاميرا جهازك لالتقاط الصورة مباشرة.</p></div>
-          </div>
-          <div class="step">
-            <div class="step-number">2</div>
-            <div><h3>اكتبي وصف المشكلة</h3><p>اذكري نوع المشكلة لتحديد الروتين المناسب.</p></div>
-          </div>
-          <div class="step">
-            <div class="step-number">3</div>
-            <div><h3>احصلي على الروتين والمنتجات</h3><p>تظهر لك نتيجة نوع البشرة، الروتين، والأصناف المقترحة.</p></div>
+          <div class="steps-container">
+            <div class="step">
+              <div class="step-number">1</div>
+              <div><h3>ارفعي صورة أو التقطيها</h3><p>استخدمي كاميرا جهازك لالتقاط الصورة مباشرة.</p></div>
+            </div>
+            <div class="step">
+              <div class="step-number">2</div>
+              <div><h3>اكتبي وصف المشكلة</h3><p>اذكري نوع المشكلة لتحديد الروتين المناسب.</p></div>
+            </div>
+            <div class="step">
+              <div class="step-number">3</div>
+              <div><h3>احصلي على الروتين والمنتجات</h3><p>تظهر لك نتيجة نوع البشرة، الروتين، والأصناف المقترحة.</p></div>
+            </div>
           </div>
         </aside>
 
-        <!-- كارت الفورم الرئيسي في الوسط -->
-        <div class="form-card">
-          <form id="skinForm">
-            <div style="margin-bottom: 24px;">
-              <h2 class="section-title"><span class="title-icon">▧</span> ارفعي صورة لبشرتك (إجباري)</h2>
-              <div class="dropzone" id="dropzone">
-                <div class="upload-icon" id="uploadIcon">＋</div>
-                <div class="preview-wrap" id="previewWrap">
-                  <img id="preview" alt="معاينة صورة البشرة">
-                  <button class="remove-image" id="removeImage" type="button" aria-label="حذف الصورة">×</button>
-                </div>
-                <h3 id="uploadHeading">اختاري صورة واضحة</h3>
-                <p id="uploadText">اسحبي الصورة إلى هنا أو اختاريها من جهازك أو التقطيها مباشرة بالكاميرا.</p>
-                <input id="fileInput" type="file" accept="image/*" hidden>
-                <div class="upload-actions">
-                  <button class="secondary-btn" type="button" id="chooseBtn">▣ اختيار صورة</button>
-                  <button class="secondary-btn" type="button" id="cameraBtn">◎ التقاط صورة</button>
-                </div>
-                <p class="hint">الصيغ المدعومة: JPG، PNG، WEBP — الحد الأقصى 8 ميجابايت</p>
-              </div>
-            </div>
-
-            <div>
-              <h2 class="section-title"><span class="title-icon">▤</span> اشرحي مشكلتك بالتفصيل</h2>
-              <label class="description-label" for="description">
-                <span>وصف المشكلة</span>
-                <span id="counter">0 / 500</span>
-              </label>
-              <textarea id="description" maxlength="500" placeholder="مثال: أعاني من حبوب في منطقة الجبهة، وبشرتي دهنية..."></textarea>
-              <div class="privacy"><span>🔒</span><span>تجنّبي كتابة معلومات شخصية. الصورة هي الأساس في التحليل.</span></div>
-              <button class="analyze-btn" id="analyzeBtn" type="submit">✦ &nbsp; حلّل بشرتي &nbsp; ←</button>
-              <div id="notice" class="notice" role="status" aria-live="polite"></div>
-            </div>
-          </form>
-        </div>
       </section>
 
       <div id="loader" class="loader" style="text-align:center; display:none; margin-top:25px; font-size:18px; font-weight:bold; color:var(--green-dark);">⏳ جاري فحص الصورة بالذكاء الاصطناعي وتحديد نوع البشرة وروتين العناية...</div>
