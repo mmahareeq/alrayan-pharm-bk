@@ -154,6 +154,9 @@ async def consult_ai(symptom: str = Form(...), file: UploadFile = File(None)):
             raise HTTPException(status_code=response.status_code, detail=f"Anthropic API Error: {response.text}")
             
         resp_data = response.json()
+        print("--- DEBUG AI RESPONSE ---")
+        print(json.dumps(resp_data, ensure_ascii=False, indent=2))
+        print("-------------------------")
         
         result_json = None
         for block in resp_data.get("content", []):
