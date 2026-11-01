@@ -163,6 +163,21 @@ async def consult_ai(symptom: str = Form(...), file: UploadFile = File(None)):
                 
         if not result_json:
             raise HTTPException(status_code=500, detail="تعذر استخراج تحليل الذكاء الاصطناعي من الاستجابة")
+        if "picks" in result_json:
+            # تحويل جدول البيانات إلى قواميس يسهل البحث فيها باستخدام الـ id
+            products_dict = df.to_dict(orient="index")
+            for pick in result_json["picks"]:
+                prod_id = pick.get("id")
+                # البحث عن المنتج بناءً على الـ id الخاص به في الإكسل
+                if prod_id in products_dict:
+                    prod = products_dict[prod_id]
+                    # سحب عمود وصف المنتج وطريقة الاستخدام حصرياً من نفس السطر
+                    what_it_does = prod.get("لشو بزيط", prod.get("Description", ""))
+                    how_to_use = prod.get("طريقة الاستخدام", prod.get("Usage", ""))
+                    
+                    # فرض النص الحقيقي الخاص بهذا المنتج فقط ودون أي تدخل من الـ AI
+                    pick["reason"] = f"لشو بزيط: {what_it_does} | طريقة الاستخدام: {how_to_use}"
+        # ==========================================================
 
         return {
             "result": result_json,
