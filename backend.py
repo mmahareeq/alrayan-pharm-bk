@@ -74,9 +74,20 @@ def load_excel_data():
         import glob
         excel_files = glob.glob(os.path.join(os.path.dirname(__file__), "*.xlsx"))
         if excel_files:
-            return pd.read_excel(excel_files[0]).fillna("")
-        return pd.DataFrame()
-    return pd.read_excel(FILE).fillna("")
+            df = pd.read_excel(excel_files[0]).fillna("")
+        else:
+            return pd.DataFrame()
+    else:
+        df = pd.read_excel(FILE).fillna("")
+    
+    # التأكد من أن عمود الـ id (أو أول عمود يمثل الرقم) هو الفهرس الأساسي
+    # نفترض أن عمود الـ id هو أول عمود أو اسمه 'id' أو '#'
+    if '#' in df.columns:
+        df.set_index('#', inplace=True)
+    elif 'id' in df.columns:
+        df.set_index('id', inplace=True)
+        
+    return df
 
 @app.get("/", response_class=HTMLResponse)
 def serve_frontend():
