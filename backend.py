@@ -18,6 +18,7 @@ app.add_middleware(
 )
 
 FILE = os.path.join(os.path.dirname(__file__), "skincare_products_v12.xlsx")
+STATS_FILE = os.path.join(os.path.dirname(__file__), "usage.json")
 
 # قراءة مفتاح الـ API وتنظيفه
 ANTHROPIC_API_KEY = os.environ.get("ANTHROPIC_API_KEY", "").strip()
@@ -88,7 +89,32 @@ def load_excel_data():
         df.set_index('id', inplace=True)
         
     return df
+def increment_usage():
+    count = 0
+    if os.path.exists(STATS_FILE):
+        try:
+            with open(STATS_FILE, "r", encoding="utf-8") as f:
+                data = json.load(f)
+                count = data.get("count", 0)
+        except Exception:
+            pass
+    count += 1
+    try:
+        with open(STATS_FILE, "w", encoding="utf-8") as f:
+            json.dump({"count": count}, f)
+    except Exception:
+        pass
+    return count
 
+def get_usage_count():
+    if os.path.exists(STATS_FILE):
+        try:
+            with open(STATS_FILE, "r", encoding="utf-8") as f:
+                data = json.load(f)
+                return data.get("count", 0)
+        except Exception:
+            pass
+    return 0
 @app.get("/", response_class=HTMLResponse)
 def serve_frontend():
     base_dir = os.path.dirname(os.path.abspath(__file__))
@@ -107,6 +133,8 @@ def get_products():
 
 @app.post("/consult")
 async def consult_ai(symptom: str = Form(...), file: UploadFile = File(None)):
+    current_count = increment_usage()
+    print(f"📊 Total app usages so far: {current_count}")
     df = load_excel_data()
     if df.empty:
         raise HTTPException(status_code=400, detail="ملف المنتجات غير موجود في المجلد")
@@ -186,3 +214,11 @@ async def consult_ai(symptom: str = Form(...), file: UploadFile = File(None)):
     except Exception as e:
         print(f"Server Error Details: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
+@app.get("/stats")
+def get_stats():
+    total = get_usage_count()
+    return {
+        "status": "success",
+        "total_uses": total,
+        "message": f"عدد مرات استخدام تطبيق صيدلية الريان حتى الآن هو: {total} مرة"
+    }
