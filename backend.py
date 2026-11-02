@@ -89,21 +89,29 @@ def load_excel_data():
         df.set_index('id', inplace=True)
         
     return df
+
+
 def increment_usage():
     count = 0
+    # قراءة العدد القديم إن وجد دون فقدان البيانات
     if os.path.exists(STATS_FILE):
         try:
             with open(STATS_FILE, "r", encoding="utf-8") as f:
                 data = json.load(f)
-                count = data.get("count", 0)
+                count = int(data.get("count", 0))
         except Exception:
-            pass
+            count = 0
+            
+    # زيادة العدد بواقع 1 لكل عملية تحليل جديدة
     count += 1
+    
+    # حفظ القيمة الجديدة التراكمية في الملف
     try:
         with open(STATS_FILE, "w", encoding="utf-8") as f:
-            json.dump({"count": count}, f)
-    except Exception:
-        pass
+            json.dump({"count": count}, f, ensure_ascii=False, indent=2)
+    except Exception as e:
+        print(f"Error saving usage stats: {str(e)}")
+        
     return count
 
 def get_usage_count():
@@ -111,9 +119,9 @@ def get_usage_count():
         try:
             with open(STATS_FILE, "r", encoding="utf-8") as f:
                 data = json.load(f)
-                return data.get("count", 0)
+                return int(data.get("count", 0))
         except Exception:
-            pass
+            return 0
     return 0
 @app.get("/", response_class=HTMLResponse)
 def serve_frontend():
