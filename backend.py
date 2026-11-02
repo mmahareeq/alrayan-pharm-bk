@@ -18,7 +18,7 @@ app.add_middleware(
 )
 
 FILE = os.path.join(os.path.dirname(__file__), "skincare_products_v12.xlsx")
-STATS_FILE = os.path.join(os.path.dirname(__file__), "usage.json")
+_TOTAL_USAGE = 0
 
 # قراءة مفتاح الـ API وتنظيفه
 ANTHROPIC_API_KEY = os.environ.get("ANTHROPIC_API_KEY", "").strip()
@@ -91,38 +91,17 @@ def load_excel_data():
     return df
 
 
-def increment_usage():
-    count = 0
-    # قراءة العدد القديم إن وجد دون فقدان البيانات
-    if os.path.exists(STATS_FILE):
-        try:
-            with open(STATS_FILE, "r", encoding="utf-8") as f:
-                data = json.load(f)
-                count = int(data.get("count", 0))
-        except Exception:
-            count = 0
-            
-    # زيادة العدد بواقع 1 لكل عملية تحليل جديدة
-    count += 1
-    
-    # حفظ القيمة الجديدة التراكمية في الملف
-    try:
-        with open(STATS_FILE, "w", encoding="utf-8") as f:
-            json.dump({"count": count}, f, ensure_ascii=False, indent=2)
-    except Exception as e:
-        print(f"Error saving usage stats: {str(e)}")
-        
-    return count
 
+
+def increment_usage():
+    global _TOTAL_USAGE
+    _TOTAL_USAGE += 1
+    print(f"📊 Current usage count in memory: {_TOTAL_USAGE}")
+    return _TOTAL_USAGE
+    
 def get_usage_count():
-    if os.path.exists(STATS_FILE):
-        try:
-            with open(STATS_FILE, "r", encoding="utf-8") as f:
-                data = json.load(f)
-                return int(data.get("count", 0))
-        except Exception:
-            return 0
-    return 0
+    return _TOTAL_USAGE
+    
 @app.get("/", response_class=HTMLResponse)
 def serve_frontend():
     base_dir = os.path.dirname(os.path.abspath(__file__))
